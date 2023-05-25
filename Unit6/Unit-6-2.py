@@ -1,5 +1,7 @@
 import nltk
 
+##reference : https://github.com/flycrane01/nltk-passive-voice-detector-for-English/blob/master/Passive-voice.py
+
 
 def isPassive(sentence):
     beforms = ["is", "am", "are", "was", "were", "been", "be", "being", "'s", "'m", "'re"]  # all forms of "be"
