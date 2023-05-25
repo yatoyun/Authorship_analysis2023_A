@@ -10,5 +10,5 @@ This notebook is slightly different from the original notebook because it was ru
 https://www.kaggle.com/code/sudalairajkumar/simple-feature-engg-notebook-spooky-author
 
 ## Unit6
-Unit6-1.py : Classification of attributive adjectives and predicative adjectives.
+>Unit6-1.py : Classification of attributive adjectives and predicative adjectives.  
 Unit6-2.py : Classification of passive-voice or not.
