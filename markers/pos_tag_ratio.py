@@ -1,31 +1,23 @@
 import nltk
-from nltk import pos_tag
-from nltk.tokenize import word_tokenize, sent_tokenize
-from softmax import calc_value
+from collections import Counter
+from nltk import sent_tokenize
+import numpy as np
+from softmax import softmax
+
+nltk.download("punkt")
+nltk.download("averaged_perceptron_tagger")
 
 
-def detect_phrasal_verbs(text):
-    tokens = word_tokenize(text)
+def pos_ratios(text):
+    tokens = nltk.word_tokenize(text)
+    pos_tags = nltk.pos_tag(tokens)
 
-    # pos tag
-    tagged = pos_tag(tokens)
+    pos_counts = Counter(tag for word, tag in pos_tags)
+    len_pos_counts = len(pos_counts)
 
-    phrasal_verbs_vap = 0  # verb + adverb + preposition
-    phrasal_verbs_vaop = 0  # verb + adverb or preposition
-    for i in range(len(tagged) - 2):
-        # Check verb or not
-        if "VB" in tagged[i][1]:
-            # Check next word is an adverb or preposition
-            if "RB" in tagged[i + 1][1] or "IN" in tagged[i + 1][1]:
-                # Check after next is a preposition
-                if "IN" in tagged[i + 2][1]:
-                    # If the verb + adverb + preposition pattern is met
-                    phrasal_verbs_vap += 1
-                else:
-                    # If the verb + adverb or preposition pattern is met
-                    phrasal_verbs_vaop += 1
+    pos_ratios = [count for tag, count in pos_counts.items()]
 
-    return calc_value(phrasal_verbs_vap, phrasal_verbs_vaop)
+    return np.prod(pos_ratios[:5])
 
 
 if __name__ == "__main__":
@@ -38,8 +30,8 @@ I knew that you could not say to yourself 'stereotomy' without being brought to 
 
     output_list = []
     for sentence in sentences:
-        output_list.append(detect_phrasal_verbs(sentence))
+        output_list.append(pos_ratios(sentence))
 
     print("Output:", output_list)
-    # output
-    # >Output: [0.25, 0.25, 0.19661193324148185, 0.25, 0.0024665092913600485]
+
+# Output: [1152, 648, 567, 6, 37440]
