@@ -1,6 +1,7 @@
 from nltk import pos_tag
 from nltk.tokenize import word_tokenize, sent_tokenize
 import nltk
+from softmax import calc_value
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
@@ -20,7 +21,7 @@ def analyze_adverbs(text):
                 initial_adverbs += 1
             elif tagged[i][1] == ',' and tagged[i + 1][1] == 'RB':
                 delayed_adverbs += 1
-    return 2 * initial_adverbs * 3 * delayed_adverbs
+    return calc_value(initial_adverbs, delayed_adverbs)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 from nltk import pos_tag
 from nltk.tokenize import word_tokenize, sent_tokenize
 import nltk
+from softmax import calc_value
 
 nltk.download("punkt")
 nltk.download("averaged_perceptron_tagger")
@@ -18,7 +19,7 @@ def analysis_adverbs(sentence):
         elif tagged[i][1].startswith("VB") and tagged[i + 1][1] == "RB":
             regular_adverbs += 1
 
-    return 2 * fronted_adverbs * 3 * regular_adverbs
+    return calc_value(fronted_adverbs, regular_adverbs)
 
 
 if __name__ == "__main__":

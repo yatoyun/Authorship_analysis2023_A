@@ -2,6 +2,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 from nltk import sent_tokenize
 from nltk.tag import pos_tag
+from softmax import calc_value
 
 
 def count_coordinate_adjective_usage(text):
@@ -17,7 +18,7 @@ def count_coordinate_adjective_usage(text):
         elif tagged_tokens[i][1] == "JJ" and tagged_tokens[i + 1][0] != ",":
             non_coordinate_count += 1
 
-    return 2 * coordinate_count * 3 * non_coordinate_count
+    return calc_value(coordinate_count, non_coordinate_count)
 
 
 if __name__ == "__main__":

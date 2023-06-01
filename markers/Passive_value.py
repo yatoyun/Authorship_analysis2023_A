@@ -1,11 +1,13 @@
 import nltk
 from nltk import sent_tokenize
+from softmax import calc_value
 
-##reference : https://github.com/flycrane01/nltk-passive-voice-detector-for-English/blob/master/Passive-voice.py
+# reference : https://github.com/flycrane01/nltk-passive-voice-detector-for-English/blob/master/Passive-voice.py
 
 
 def isPassive(sentence):
-    beforms = ["is", "am", "are", "was", "were", "been", "be", "being", "'s", "'m", "'re"]  # all forms of "be"
+    beforms = ["is", "am", "are", "was", "were", "been",
+               "be", "being", "'s", "'m", "'re"]  # all forms of "be"
     aux = [
         "do",
         "did",
@@ -19,7 +21,8 @@ def isPassive(sentence):
     tags = [i[1] for i in tokens]
     if tags.count("VBN") == 0:  # no PP, no passive voice.
         return 0
-    elif tags.count("VBN") == 1 and "been" in words:  # one PP "been", still no passive voice.
+    # one PP "been", still no passive voice.
+    elif tags.count("VBN") == 1 and "been" in words:
         return 0
     else:
         pos = [
@@ -31,7 +34,8 @@ def isPassive(sentence):
             for i in range(len(chunk), 0, -1):
                 last = chunk.pop()
                 if last == "NN" or last == "PRP":
-                    start = i  # get the chunk between PP and the previous NN or PRP (which in most cases are subjects)
+                    # get the chunk between PP and the previous NN or PRP (which in most cases are subjects)
+                    start = i
                     break
             sentchunk = words[start:end]
             tagschunk = tags[start:end]
@@ -49,7 +53,8 @@ def isPassive(sentence):
                     else:  # check if they are all forms of "be" or auxiliaries such as "do" or "have".
                         break
                 else:
-                    return (2 * num_beforms) * (3 * num_aux)
+                    return calc_value(num_beforms, num_aux)
+
     return 0
 
 
