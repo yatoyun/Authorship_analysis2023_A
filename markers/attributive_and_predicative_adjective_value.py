@@ -1,31 +1,21 @@
 import nltk
+from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk import pos_tag
-from nltk.tokenize import word_tokenize, sent_tokenize
-from softmax import calc_value
 
 
-def detect_phrasal_verbs(text):
-    tokens = word_tokenize(text)
+def attributive_and_predicative_adjective_value(sentence):
+    classification_adjective = 1  # 0 is not used adjective, 1 = attribute, -1 = predicate
+    words = word_tokenize(sentence)
+    tagged_words = pos_tag(words)
 
-    # pos tag
-    tagged = pos_tag(tokens)
+    for i, (word, pos) in enumerate(tagged_words):
+        if pos == "JJ":
+            if i + 1 < len(tagged_words) and tagged_words[i + 1][1] == "NN":
+                classification_adjective *= 2
+            elif i > 0 and tagged_words[i - 1][1] in {"VB", "VBD", "VBG", "VBN", "VBP", "VBZ"}:
+                classification_adjective *= 3
 
-    phrasal_verbs_vap = 1  # verb + adverb + preposition
-    phrasal_verbs_vaop = 1  # verb + adverb or preposition
-    for i in range(len(tagged) - 2):
-        # Check verb or not
-        if "VB" in tagged[i][1]:
-            # Check next word is an adverb or preposition
-            if "RB" in tagged[i + 1][1] or "IN" in tagged[i + 1][1]:
-                # Check after next is a preposition
-                if "IN" in tagged[i + 2][1]:
-                    # If the verb + adverb + preposition pattern is met
-                    phrasal_verbs_vap += 1
-                else:
-                    # If the verb + adverb or preposition pattern is met
-                    phrasal_verbs_vaop += 1
-
-    return calc_value(phrasal_verbs_vap, phrasal_verbs_vaop)
+    return classification_adjective
 
 
 if __name__ == "__main__":
@@ -38,8 +28,8 @@ I knew that you could not say to yourself 'stereotomy' without being brought to 
 
     output_list = []
     for sentence in sentences:
-        output_list.append(detect_phrasal_verbs(sentence))
+        output_list.append(attributive_and_predicative_adjective_value(sentence))
 
     print("Output:", output_list)
-    # output
-    # >Output: [0.25, 0.25, 0.19661193324148185, 0.25, 0.0024665092913600485]
+
+# Output: [3, 8, 4, 1, 8]

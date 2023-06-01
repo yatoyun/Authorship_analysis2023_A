@@ -4,7 +4,7 @@ from nltk import sent_tokenize
 from nltk.tag import pos_tag
 
 
-def count_adjective_usage(text):
+def count_coordinate_adjective_usage(text):
     tokens = word_tokenize(text)
     tagged_tokens = pos_tag(tokens)
 
