@@ -1,28 +1,23 @@
 import nltk
-from nltk import pos_tag, sent_tokenize
-from nltk import RegexpParser
+from nltk.tokenize import word_tokenize
+from nltk import sent_tokenize
+from nltk.tag import pos_tag
 
 
-def count_noun_phrases(text):
-    tokens = nltk.word_tokenize(text)
+def count_adjective_usage(text):
+    tokens = word_tokenize(text)
     tagged_tokens = pos_tag(tokens)
 
-    # Define noun phrase chunk grammar
-    np_grammar = "NP: {<DT>?<JJ>*<NN>}"
+    coordinate_count = 1
+    non_coordinate_count = 1
 
-    # Create parser
-    parser = RegexpParser(np_grammar)
+    for i in range(len(tagged_tokens) - 1):
+        if tagged_tokens[i][1] == "JJ" and tagged_tokens[i + 1][0] == ",":
+            coordinate_count += 1
+        elif tagged_tokens[i][1] == "JJ" and tagged_tokens[i + 1][0] != ",":
+            non_coordinate_count += 1
 
-    # Parse tagged tokens
-    tree = parser.parse(tagged_tokens)
-
-    # count noun phrases
-    np_count = 0
-    for subtree in tree.subtrees():
-        if subtree.label() == "NP":
-            np_count += 1
-
-    return np_count
+    return 2 * coordinate_count * 3 * non_coordinate_count
 
 
 if __name__ == "__main__":
@@ -35,8 +30,9 @@ I knew that you could not say to yourself 'stereotomy' without being brought to 
 
     output_list = []
     for sentence in sentences:
-        output_list.append(count_noun_phrases(sentence))
+        output_list.append(count_adjective_usage(sentence))
 
     print("Output:", output_list)
-    # output
-    # >Output: [8, 9, 7, 3, 5]
+
+# Output:
+# >Output: [18, 30, 18, 6, 42]
